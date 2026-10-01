@@ -1,4 +1,4 @@
-# Usage Bars
+# Token-Management-System-TMS
 
 Windows 작업 표시줄 위에 **Claude**와 **Codex** 사용량(5시간 / 7일 한도)을 보여주는 작은 막대입니다.
 PowerShell 스크립트로만 만들어져 있어서 따로 빌드하거나 설치할 프로그램이 없습니다.
