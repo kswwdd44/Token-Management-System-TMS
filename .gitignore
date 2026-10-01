@@ -1,0 +1,8 @@
+# Release packages are attached to GitHub Releases, not committed.
+*.zip
+
+*.log
+config.json
+
+# No logo artwork in this repository.
+*.png
