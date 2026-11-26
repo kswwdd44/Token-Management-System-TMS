@@ -1,0 +1,28 @@
+TMS 1.2.0 - data access and release review
+
+Claude monitor (historical implementation retained for review)
+- Searches Windows Credential Manager targets matching Claude/Anthropic and/or
+  reads .claude/.credentials.json to retrieve an OAuth access token.
+- Sends that token as Authorization to https://api.anthropic.com/api/oauth/usage.
+  This is an undocumented usage endpoint, not a supported public usage API.
+- Token renewal may run claude -p with a small prompt, consuming account quota.
+- Does not send credentials or usage to the seller or Agensi.
+- This third-party credential-based monitoring design needs provider clarification
+  before commercial distribution. Removing logos or adding a disclaimer does not
+  establish permission for credential use. Do not market this as provider-approved.
+
+Codex monitor
+- Runs the user's installed codex app-server and requests account/rateLimits/read.
+- Uses the CLI's authentication; TMS does not parse the Codex auth token file.
+- API/CLI behavior and available usage windows may change.
+
+Local effects
+- User installation: LOCALAPPDATA/ClaudeUsageBar and/or CodexUsageBar.
+- Startup and Start menu shortcuts for the selected strip.
+- Display preferences: .claude-usage-bar or .codex-usage-bar in the user profile.
+- Local diagnostic logs in TEMP. Review and redact logs before sharing them.
+- Reset buttons only open provider web pages in the default browser. No reset
+  redemption, balance lookup, purchase or payment is performed by those buttons.
+
+The standalone Get-TmsStatus.ps1 checks file/command presence and saved version
+labels only. It does not read credential contents, contact providers or run models.

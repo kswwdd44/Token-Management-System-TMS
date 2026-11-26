@@ -1,4 +1,4 @@
-$ErrorActionPreference = "Stop"
+﻿$ErrorActionPreference = "Stop"
 
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
@@ -89,7 +89,7 @@ public class BarCredMan {
 [System.Windows.Forms.Application]::EnableVisualStyles()
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-$script:version = "1.0.0"
+$script:version = "1.2.0"
 $script:singleInstance = New-Object System.Threading.Mutex($false, "Local\ClaudeUsageBar")
 $script:owns = $false
 try { $script:owns = $script:singleInstance.WaitOne(0) } catch [System.Threading.AbandonedMutexException] { $script:owns = $true }
@@ -720,6 +720,10 @@ $keeper.Add_Tick({
     Assert-TopMost
 })
 
+$script:usageBarProduct = 'Claude'
+$script:usageBarResetUrl = 'https://claude.ai/settings/usage'
+. (Join-Path $PSScriptRoot 'UsageBarActions.ps1')
+
 $refreshItem.Add_Click({ Update-Usage -Force })
 $detailsItem.Add_Click({
     $text = $script:lastTip
@@ -750,7 +754,7 @@ $dragUp = {
         Save-Config
     }
 }
-$draggable = @($form, $mark)
+$draggable = @($form)
 foreach ($row in $allRows) {
     $draggable += $row.Label; $draggable += $row.Percent; $draggable += $row.Reset
 }

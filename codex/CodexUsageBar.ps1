@@ -1,4 +1,4 @@
-$ErrorActionPreference = "Stop"
+﻿$ErrorActionPreference = "Stop"
 
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
@@ -22,7 +22,7 @@ public static class CodexBarNative {
 [CodexBarNative]::SetProcessDPIAware() | Out-Null
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
-$script:version = "1.1.0"
+$script:version = "1.2.0"
 $script:mutex = [System.Threading.Mutex]::new($false, "Local\CodexUsageBar")
 $created = $false
 try { $created = $script:mutex.WaitOne(0) } catch [System.Threading.AbandonedMutexException] { $created = $true }
@@ -329,6 +329,10 @@ $keeper.Add_Tick({
     if (-not $form.Visible) { [CodexBarNative]::ShowWindow($form.Handle, 8) | Out-Null }
     Set-BarPosition; Assert-TopMost
 })
+$script:usageBarProduct = 'Codex'
+$script:usageBarResetUrl = 'https://chatgpt.com/settings/usage?tab=overview'
+. (Join-Path $PSScriptRoot 'UsageBarActions.ps1')
+
 $refreshItem.Add_Click({ Update-Usage })
 $detailsItem.Add_Click({ [System.Windows.Forms.MessageBox]::Show($(if($script:lastTip){$script:lastTip}else{"No data yet."}), "Codex Usage Bar $($script:version)") | Out-Null })
 $exitItem.Add_Click({ $form.Close() })
@@ -337,7 +341,7 @@ $dragging = $false; $dragOrigin = 0
 $dragDown = { param($s,$e) if($e.Button -eq [System.Windows.Forms.MouseButtons]::Left){$script:dragging=$true;$script:dragOrigin=[System.Windows.Forms.Cursor]::Position.X-$form.Location.X} }
 $dragMove = { if($script:dragging){$x=[System.Windows.Forms.Cursor]::Position.X-$script:dragOrigin;if($x-lt 0){$x=0};$script:offsetX=$x;$form.Location=New-Object System.Drawing.Point($x,$form.Location.Y)} }
 $dragUp = { if($script:dragging){$script:dragging=$false;Save-Config} }
-foreach($c in @($form,$mark,$rowFive.Label,$rowFive.Percent,$rowFive.Reset,$rowSeven.Label,$rowSeven.Percent,$rowSeven.Reset)){ $c.Add_MouseDown($dragDown);$c.Add_MouseMove($dragMove);$c.Add_MouseUp($dragUp) }
+foreach($c in @($form,$rowFive.Label,$rowFive.Percent,$rowFive.Reset,$rowSeven.Label,$rowSeven.Percent,$rowSeven.Reset)){ $c.Add_MouseDown($dragDown);$c.Add_MouseMove($dragMove);$c.Add_MouseUp($dragUp) }
 
 $form.Add_FormClosed({ $timer.Stop();$keeper.Stop();Stop-AppServer;Save-Config;try{$script:mutex.ReleaseMutex()}catch{};$script:mutex.Dispose() })
 $handle = $form.Handle; $ex = [CodexBarNative]::GetWindowLong($handle,-20); [CodexBarNative]::SetWindowLong($handle,-20,($ex -bor 0x80 -bor 0x08000000)) | Out-Null

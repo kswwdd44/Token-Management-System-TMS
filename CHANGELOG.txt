@@ -1,0 +1,10 @@
+1.2.0
+- Unified Claude and Codex version labels at 1.2.0.
+- Added a sign-in startup toggle to both context menus.
+- Added confirmed navigation from the left product label to the official reset screen.
+- Updated Codex destination to https://chatgpt.com/settings/usage?tab=overview.
+- Retained plain text provider labels for distribution; no logo files or character art.
+- Added a marked install directory and native PowerShell uninstall path checks.
+- Added standalone read-only installation diagnostics.
+
+This GitHub release does not imply provider or marketplace approval.
